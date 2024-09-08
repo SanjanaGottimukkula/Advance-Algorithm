@@ -1,0 +1,41 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+class SparseMatrix
+ {
+public:
+    vector<int> row, col, value;  
+    SparseMatrix(const vector<vector<int>> &matrix)
+ {
+
+       for (int i = 0; i < matrix.size(); ++i)
+       for (int j = 0; j < matrix[0].size(); ++j)
+       if (matrix[i][j])
+ {
+       row.push_back(i);
+       col.push_back(j);
+       value.push_back(matrix[i][j]);
+   
+ 	  }
+    }
+
+ void display() const {
+ for (int i = 0; i < row.size(); ++i)
+     cout << "Row: " << row[i] << ", Column: " << col[i] << ", Value: " << value[i] << endl;
+ }
+};
+
+int main()
+ {
+    vector<vector<int>> matrix = {
+        {0, 0, 3, 0, 4},
+        {0, 0, 5, 7, 0},
+        {0, 0, 0, 0, 0},
+        {0, 2, 6, 0, 0}
+    };
+
+    SparseMatrix sparseMatrix(matrix);
+    sparseMatrix.display();
+
+    return 0;
+}
