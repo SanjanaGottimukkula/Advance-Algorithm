@@ -1,0 +1,87 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <limits>
+
+// Defining a structure to represent a node in the graph
+struct Node {
+    int id;
+    int distance;
+    std::vector<int> path;
+};
+
+// comparison function for the priority queue
+struct CompareNodes {
+    bool operator()(const Node& a, const Node& b) {
+        return a.distance > b.distance;
+    }
+};
+
+// Function to implement a Dijkstra's algorithm
+void dijkstra(const std::vector<std::vector<int>>& graph, int start, int end) {
+    int numNodes = graph.size();
+    std::vector<int> distances(numNodes, std::numeric_limits<int>::max());
+    std::vector<std::vector<int>> paths(numNodes);
+
+    //paths for the starting node
+    distances[start] = 0;
+    paths[start].push_back(start);
+
+    // Created a priority queue to hold nodes to visit
+    std::priority_queue<Node, std::vector<Node>, CompareNodes> queue;
+    queue.push({start, 0, {start}});
+
+    while (!queue.empty()) {
+        Node node = queue.top();
+        queue.pop();
+
+        // If we've reached the end node, its printing the shortest path and distance
+        if (node.id == end) {
+            std::cout << "Shortest path: ";
+            for (int i = 0; i < node.path.size(); i++) {
+                std::cout << node.path[i] << " ";
+            }
+            std::cout << std::endl;
+            std::cout << "Distance: " << node.distance << std::endl;
+            return;
+        }
+
+        // visiting each neighbor of the current node
+        for (int i = 0; i < numNodes; i++) {
+            if (graph[node.id][i] != 0 && node.distance + graph[node.id][i] < distances[i]) {
+                distances[i] = node.distance + graph[node.id][i];
+                paths[i] = node.path;
+                paths[i].push_back(i);
+                queue.push({i, distances[i], paths[i]});
+            }
+        }
+    }
+
+    // If there are no paths to the end node, then its printing  an error message
+    std::cout << "No path found from node " << start << " to node " << end << std::endl;
+}
+
+int main() {
+    // Hard-coded graph data (replace with user input if desired)
+    std::vector<std::vector<int>> graph = {
+        {0, 4, 0, 0, 0, 0, 0, 8, 0},
+        {4, 0, 8, 0, 0, 0, 0, 11, 0},
+        {0, 8, 0, 7, 0, 4, 0, 0, 2},
+        {0, 0, 7, 0, 9, 14, 0, 0, 0},
+        {0, 0, 0, 9, 0, 10, 0, 0, 0},
+        {0, 0, 4, 14, 10, 0, 2, 0, 0},
+        {0, 0, 0, 0, 0, 2, 0, 1, 6},
+        {8, 11, 0, 0, 0, 0, 1, 0, 7},
+        {0, 0, 2, 0, 0, 0, 6, 7, 0}
+    };
+
+    int start, end;
+    std::cout << "Enter the starting node (0-8): ";
+    std::cin >> start;
+    std::cout << "Enter the ending node (0-8): ";
+    std::cin >> end;
+
+    dijkstra(graph, start, end);
+
+    return 0;
+}
