@@ -58,11 +58,14 @@ void HuffmanCodes(string S, vector<int> f) {
 }
 
 int main() {
-    string S;
+    cout << "Enter the number of characters in the string: ";
     int N;
+    cin >> N;
+
+    string S;
     cout << "Enter the string S: ";
-    cin >> S;
-    N = S.size();
+    cin.ignore();
+    getline(cin, S);
 
     vector<int> f(N);
     cout << "Enter the frequencies for each character: ";
