@@ -1,0 +1,76 @@
+#include <iostream>
+#include <queue>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct Node {
+    char ch;
+    int freq;
+    Node* left;
+    Node* right;
+
+    Node(char ch, int freq) {
+        this->ch = ch;
+        this->freq = freq;
+        left = right = nullptr;
+    }
+};
+
+struct compare {
+    bool operator()(Node* l, Node* r) {
+        return (l->freq > r->freq);
+    }
+};
+
+void printCodes(Node* root, string str) {
+    if (!root) return;
+
+    if (root->ch != '$') {
+        cout << root->ch << ": " << str << endl;
+    }
+
+    printCodes(root->left, str + "0");
+    printCodes(root->right, str + "1");
+}
+
+void HuffmanCodes(string S, vector<int> f) {
+    priority_queue<Node*, vector<Node*>, compare> pq;
+
+    for (int i = 0; i < S.size(); i++) {
+        Node* node = new Node(S[i], f[i]);
+        pq.push(node);
+    }
+
+    while (pq.size() != 1) {
+        Node* left = pq.top(); pq.pop();
+        Node* right = pq.top(); pq.pop();
+
+        Node* newNode = new Node('$', left->freq + right->freq);
+        newNode->left = left;
+        newNode->right = right;
+
+        pq.push(newNode);
+    }
+
+    printCodes(pq.top(), "");
+}
+
+int main() {
+    string S;
+    int N;
+    cout << "Enter the string S: ";
+    cin >> S;
+    N = S.size();
+
+    vector<int> f(N);
+    cout << "Enter the frequencies for each character: ";
+    for (int i = 0; i < N; i++) {
+        cin >> f[i];
+    }
+
+    HuffmanCodes(S, f);
+
+    return 0;
+}
